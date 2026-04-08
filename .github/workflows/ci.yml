@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run TypeScript type check
+        working-directory: ./frontend
+        run: npx tsc --noEmit
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Sanity TypeScript check
+        working-directory: ./backend
+        run: npx sanity-codegen

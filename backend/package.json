@@ -1,0 +1,47 @@
+{
+  "name": "fir4s-portfolio-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "package.json",
+  "author": "fir4s",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "sanity start",
+    "dev": "sanity start",
+    "build": "sanity build",
+    "build:types": "npx sanity-codegen",
+    "deploy": "sanity deploy",
+    "backup": "sanity dataset export production \"../sanity-backups/backup-$(date +\"%Y-%m-%d-%H-%M\").tar.gz\""
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/base": "^2.30.1",
+    "@sanity/code-input": "^2.30.1",
+    "@sanity/color-input": "^2.31.1",
+    "@sanity/core": "^2.30.2",
+    "@sanity/default-layout": "^2.30.1",
+    "@sanity/default-login": "^2.30.1",
+    "@sanity/desk-tool": "^2.30.1",
+    "@sanity/eslint-config-studio": "^2.0.0",
+    "@sanity/vision": "^2.30.1",
+    "@types/react-syntax-highlighter": "^15.5.4",
+    "@u-wave/react-vimeo": "^0.9.8",
+    "eslint": "^8.6.0",
+    "prop-types": "^15.7",
+    "react": "^17.0",
+    "react-dom": "^17.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-youtube": "^9.0.3",
+    "sanity-plugin-seo-pane": "^1.4.0",
+    "sanity-plugin-tags": "^1.5.0",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {
+    "@sanity/types": "^2.29.5",
+    "prettier": "^2.7.1",
+    "sanity-codegen": "^0.9.8"
+  }
+}
