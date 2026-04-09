@@ -25,7 +25,7 @@ export const TextWindow = ({
   return (
     <TerminalWindow {...terminalWindowProps}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      {icon && <img src={icon} alt="fake computer icon" className="w-[20%] h-auto m-auto mb-[1em] pointer-events-none" />}
+      {icon && <img src={icon} alt="" role="presentation" className="w-[20%] h-auto m-auto mb-[1em] pointer-events-none" />}
       {texts.map((text, i, array) => (
         <div
           style={{ marginTop: i !== 0 ? textMargin : 0 }}

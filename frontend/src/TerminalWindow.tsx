@@ -4,7 +4,6 @@ import { useBreakpoints } from './useBreakpoints';
 import { useTrueAfterDelay } from './useTrueAfterDelay';
 import colors from './colors';
 
-// import { fontUrls } from './typography';
 export const TerminalWindow = ({
   children,
   title,

@@ -1,20 +1,15 @@
 import React, {
   Children,
   ReactElement,
-  // ReactNode,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import {
-  useEventListener,
-  // useInterval
-} from 'usehooks-ts';
-import create from 'zustand';
-import createVanilla from 'zustand/vanilla';
+import { useEventListener } from 'usehooks-ts';
+import { create } from 'zustand';
+import { createStore as createVanilla } from 'zustand/vanilla';
 import { PreloadLocalSvg } from './PreloadLocalSvg';
-// import { Html } from '@react-three/drei';
 import { useHasNoMouse } from './useHasNoMouse';
 import { useParamOnLoad } from './useParamOnLoad';
 
@@ -212,7 +207,7 @@ const useMouseIsInDocument = () => {
       document.removeEventListener('mouseenter', handleMouseenter);
       document.removeEventListener('mouseout', handleMouseout);
     };
-  });
+  }, []);
 
   return inDocument;
 };
@@ -308,20 +303,3 @@ export function CustomCursorHover({
   });
 }
 
-// type HtmlProps = React.ComponentProps<typeof Html>
-// // eslint-disable-next-line no-shadow
-// export const DreiHtmlWithCursor = ({ children, ...HtmlProps }:
-//   { children: ReactNode } & HtmlProps) => {
-//   const clearHover = useClearHover();
-//   return (
-//     <Html
-//       {...HtmlProps}
-//       onPointerLeave={() => {
-//         console.log('clear!');
-//         clearHover();
-//       }}
-//     >
-//       {children}
-//     </Html>
-//   );
-// };

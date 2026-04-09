@@ -33,6 +33,9 @@ const nextConfig = {
     SANITY_PROJECT_ID: process.env.SANITY_PROJECT_ID,
     SANITY_DATASET: process.env.SANITY_DATASET,
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
   optimizeFonts: false,
   webpack(config) {
     // The installed @react-three/a11y package has a broken/missing dist file.

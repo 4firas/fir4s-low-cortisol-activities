@@ -5,13 +5,16 @@ import { Text } from '@react-three/drei';
 import { GroupProps } from '@react-three/fiber';
 import bookFillPoints from './lines/bookFill';
 import bookLinesPoints from './lines/bookLines';
-// import bookHighlightPoints from './lines/bookHighlight';
 import { Scribble } from './Scribble';
 import { CoordArray } from './CoordArray';
 import { fontUrls } from './typography';
 import { useTrueAfterDelay } from './useTrueAfterDelay';
 import colors from './colors';
 import { useBreakpoints } from './useBreakpoints';
+
+const bookFillColor = new Color('#3A2A1A');
+const bookLinesColorVal = new Color(colors.blueSlate);
+const notebookRotation: [number, number, number] = [Math.PI, 0, 0];
 
 export function Notebook({ ...groupProps }:GroupProps) {
   let time = 450;
@@ -32,8 +35,8 @@ export function Notebook({ ...groupProps }:GroupProps) {
         size={1.5}
         position={[0.2, 0, -0.3]}
         lineWidth={0.5}
-        color={new Color('#3A2A1A')}
-        rotation={[Math.PI, 0, 0]}
+        color={bookFillColor}
+        rotation={notebookRotation}
         visible={fillVisible}
         drawSpringConfig={config.molasses}
         curved
@@ -44,8 +47,8 @@ export function Notebook({ ...groupProps }:GroupProps) {
         size={1.5}
         position={[0, 0, 0]}
         lineWidth={0.015}
-        color={new Color(colors.blueSlate)}
-        rotation={[Math.PI, 0, 0]}
+        color={bookLinesColorVal}
+        rotation={notebookRotation}
         visible={linesVisible}
         curved
         nPointsInCurve={700}

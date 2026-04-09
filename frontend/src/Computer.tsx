@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
 import { Color, MeshBasicMaterial } from 'three';
 import {
@@ -40,24 +40,31 @@ export function Computer() {
   const [computerWillTurnOn, setComputerWillTurnOn] = useState(false);
   const [computerOn, setComputerOn] = useState(false);
   const [computerTurningOn, setComputerTurningOn] = useState(false);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const animateComputerOn = () => {
-    let delay = 0;
+  // Clean up all timeouts on unmount
+  useEffect(() => () => {
+    timeoutsRef.current.forEach(clearTimeout);
+  }, []);
+
+  const animateComputerOn = useCallback(() => {
     setComputerTurningOn(true); setComputerOnButtonHovering(false);
-    setTimeout(() => { setComputerOn(true); setComputerTurningOn(false); }, delay += 300);
-  };
+    const t = setTimeout(() => { setComputerOn(true); setComputerTurningOn(false); }, 300);
+    timeoutsRef.current.push(t);
+  }, []);
 
   useEffect(() => {
     if (!computerOn && !computerTurningOn && !computerWillTurnOn && (sceneController.scene !== 'start' && sceneController.scene !== 'intro')) {
       setComputerWillTurnOn(true);
-      setTimeout(() => { animateComputerOn(); }, 4000);
+      const t = setTimeout(() => { animateComputerOn(); }, 4000);
+      timeoutsRef.current.push(t);
     }
-  }, [sceneController.scene, computerOn, computerTurningOn, computerWillTurnOn]);
+  }, [sceneController.scene, computerOn, computerTurningOn, computerWillTurnOn, animateComputerOn]);
 
-  const triggerStart = () => {
+  const triggerStart = useCallback(() => {
     animateComputerOn();
     sceneController.setScene('menu');
-  };
+  }, [sceneController.setScene]);
 
   let computerPartScale = 1;
   if (computerOnButtonHovering) { computerPartScale = 1.1; }
@@ -148,7 +155,7 @@ export function Computer() {
         nPointsInCurve={700}
         scale={computerPartScale}
         depthTest={false}
-        renderOrder={2}
+        renderOrder={3}
       />
 
       {computerOn ? <ComputerTerminal /> : null}
@@ -163,7 +170,7 @@ export function Computer() {
         fontSize={0.5}
         font={fontUrls.bryantBold}
         material={textMaterial}
-        renderOrder={3}
+        renderOrder={4}
         visible={computerCanBeTurnedOn && !computerTurningOn && !computerOn && !computerWillTurnOn}
       >
         {hasNoMouse ? 'Tap' : 'Click'}

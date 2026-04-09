@@ -1,4 +1,4 @@
-import React, { Ref, useMemo, useRef } from 'react';
+import React, { Ref, useCallback, useMemo, useRef } from 'react';
 import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber';
 import { CatmullRomCurve3, Color, Vector3 } from 'three';
 import {
@@ -37,7 +37,7 @@ declare global {
  * This component uses MeshLine to render a colored line (width width in world coords)
  * that animates in/out based on visible prop.
  */
-export const Scribble = ({
+export const Scribble = React.memo(({
   points,
   size,
   position,
@@ -97,12 +97,18 @@ export const Scribble = ({
   // Animate by incrementing/decrementing the dash ratio fed to the material shader
   // value of 0 means the entire line is drawn, 1 means none of it is drawn.
   const materialRef = useRef<MeshLineMaterial>();
+  const animationDone = useRef(false);
   useFrame(() => {
-    if (materialRef.current) {
-      const newDashRatio = 1 - percentageDrawn.get();
-      if (newDashRatio !== materialRef.current.uniforms.dashRatio.value) {
-        materialRef.current.uniforms.dashRatio.value = newDashRatio;
-      }
+    if (!materialRef.current) return;
+    // Skip frame updates when animation is fully drawn and stable
+    if (animationDone.current && visible) return;
+    const newDashRatio = 1 - percentageDrawn.get();
+    if (Math.abs(newDashRatio - materialRef.current.uniforms.dashRatio.value) > 0.001) {
+      materialRef.current.uniforms.dashRatio.value = newDashRatio;
+      animationDone.current = false;
+    } else if (!animationDone.current && visible) {
+      materialRef.current.uniforms.dashRatio.value = newDashRatio;
+      animationDone.current = true;
     }
   });
 
@@ -134,4 +140,4 @@ export const Scribble = ({
       />
     </animated.mesh>
   );
-};
+});

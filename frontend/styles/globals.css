@@ -9,19 +9,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Vars we reference in tailwind classes */
-/* :root {
-  @screen lg {
-  }
-} */
-
-/* canvas {
-  @apply absolute top-0 left-0 w-full h-full;
-} */
-/* canvas {
-  border: 5px solid red;
-} */
-
 body {
   @apply select-none overflow-hidden touch-none bg-darkBg text-blueSlate transition-colors duration-1000;
 
@@ -39,7 +26,7 @@ body {
 
 /* Global focus style */
 *:focus-visible {
-  outline: 4px solid var(--color-darkGoldenrod, #C39040);
+  outline: 4px solid #C39040;
 }
 
 /*The div on this button can sometimes block mouse

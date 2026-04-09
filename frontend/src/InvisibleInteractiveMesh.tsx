@@ -10,14 +10,18 @@ import circlePoints from './lines/circle';
 import { Scribble } from './Scribble';
 import { CoordArray } from './CoordArray';
 
+const debugColor = new Color(0xff0000);
+const focusRingColor = new Color(0xff0000);
+const focusRingRotation: CoordArray = [Math.PI, 0, -Math.PI / 15];
+
 export const InvisibleInteractiveMesh = ({
   width = 1,
   height = 1,
   debug = false,
   cursor = 'default',
-  /** Must be idemponent */
+  /** Must be idempotent */
   onFocus = () => {},
-  /** Must be idemponent */
+  /** Must be idempotent */
   onBlur = () => {},
   onClick = () => {},
   ...groupProps
@@ -26,9 +30,9 @@ export const InvisibleInteractiveMesh = ({
   height?: number;
   debug?: boolean;
   cursor?: CustomCursorState;
-  /** Must be idemponent */
+  /** Must be idempotent */
   onFocus?: () => void;
-  /** Must be idemponent */
+  /** Must be idempotent */
   onBlur?: () => void;
   onClick?: () => void;
 } & GroupProps) => {
@@ -84,7 +88,7 @@ export const InvisibleInteractiveMesh = ({
         />
         <meshStandardMaterial
           attach="material"
-          color={new Color(0xff0000)}
+          color={debugColor}
           opacity={debug ? 0.3 : 0}
           transparent
           depthTest={false}
@@ -96,8 +100,8 @@ export const InvisibleInteractiveMesh = ({
         size={Math.min(height, width)}
         position={[0, 0, 0.1]}
         lineWidth={0.1}
-        color={new Color(0xff0000)}
-        rotation={[Math.PI, 0, -Math.PI / 15]}
+        color={focusRingColor}
+        rotation={focusRingRotation}
         visible={focus}
         curved
         nPointsInCurve={100}
