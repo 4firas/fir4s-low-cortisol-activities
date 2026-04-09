@@ -7,7 +7,7 @@ type TextProps = React.ComponentProps<typeof Text>;
 
 export const TIME_PER_CHAR = 25;
 
-export const ThreeTextTypewriter = ({
+export const ThreeTextTypewriter = React.memo(({
   children, showCarat = true, timePerChar = TIME_PER_CHAR, delay = 100, ...textProps
 }:
 { children: string; showCarat?: boolean; timePerChar?:number, delay?:number } & TextProps) => {
@@ -16,6 +16,7 @@ export const ThreeTextTypewriter = ({
   const [caratBlinkingOn, setCaratBlinkingOn] = useState(false);
 
   const started = useTrueAfterDelay(delay);
+  const finished = text.length === targetText.length;
 
   useInterval(() => {
     if (!targetText.includes(text)) {
@@ -25,11 +26,11 @@ export const ThreeTextTypewriter = ({
     if (started && text.length < targetText.length) {
       setText(targetText.slice(0, text.length + 1));
     }
-  }, timePerChar);
+  }, finished ? null : timePerChar);
 
   useInterval(() => {
     setCaratBlinkingOn(!caratBlinkingOn);
-  }, 300);
+  }, showCarat ? 300 : null);
 
   return (
     // @ts-ignore
@@ -39,9 +40,9 @@ export const ThreeTextTypewriter = ({
       {text + (showCarat && caratBlinkingOn ? '_' : ' ')}
     </Text>
   );
-};
+});
 
-export const Typewriter = ({
+export const Typewriter = React.memo(({
   children, showCarat = true,
   timePerChar = TIME_PER_CHAR, className = '', delay = 100,
   hideCaratAtEnd = false,
@@ -61,6 +62,7 @@ export const Typewriter = ({
 
   const finished = text.length === targetText.length;
 
+  // Stop typing interval once finished
   useInterval(() => {
     if (!targetText.includes(text)) {
       setText('');
@@ -69,11 +71,13 @@ export const Typewriter = ({
     if (started && text.length < targetText.length) {
       setText(targetText.slice(0, text.length + 1));
     }
-  }, timePerChar);
+  }, finished ? null : timePerChar);
 
+  // Stop carat blink interval when carat is hidden at end
+  const caratActive = showCarat && !(hideCaratAtEnd && finished);
   useInterval(() => {
     setCaratBlinkingOn(!caratBlinkingOn);
-  }, 300);
+  }, caratActive ? 300 : null);
 
   let caratVisible = false;
   if (started && showCarat) {
@@ -94,4 +98,4 @@ export const Typewriter = ({
       </span>
     </p>
   );
-};
+});

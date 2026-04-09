@@ -44,7 +44,7 @@ export const CloseButton = ({ setOpen }: { setOpen: (_open: boolean) => void; })
   );
 };
 
-export const ScollingContentContainer = ({ children }: { children: ReactNode; }) => {
+export const ScrollingContentContainer = ({ children }: { children: ReactNode; }) => {
   const breakpoints = useBreakpoints();
 
   const { scrollRef, scrolledToBottom } = useScrolledToBottom();
@@ -122,7 +122,6 @@ export const ScollingContentContainer = ({ children }: { children: ReactNode; })
 export const ProjectHtmlModal = ({ project, position, setOpen }:
   { project: Project; position: CoordArray, setOpen: (_open:boolean)=>void }) => {
   const { color1 } = project;
-  // console.log(color1);
   return (
     <Html
       position={position}
@@ -135,10 +134,10 @@ export const ProjectHtmlModal = ({ project, position, setOpen }:
       }}
     >
       <CloseButton setOpen={setOpen} />
-      <ScollingContentContainer>
+      <ScrollingContentContainer>
         <ProjectHeader project={project} />
         <ProjectBody project={project} />
-      </ScollingContentContainer>
+      </ScrollingContentContainer>
     </Html>
   );
 };

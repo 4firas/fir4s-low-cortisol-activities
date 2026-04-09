@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
@@ -57,9 +57,10 @@ const TEXT_LINES = [
 /**
  * Creates a canvas that can be used as a ring texture.
  * The canvas writes a line of code from TEXT_LINES.
- * It animates to simulate someone typing another line of text on top
+ * It animates to simulate someone typing another line of text on top.
+ * Returns [canvas, cleanup] so the interval can be cleared.
  */
-function createTextCanvas(): HTMLCanvasElement | null {
+function createTextCanvas(): [HTMLCanvasElement | null, () => void] {
   // Create a canvas
   const canvas = document.createElement('canvas');
   canvas.width = CANVAS_WIDTH;
@@ -82,9 +83,6 @@ function createTextCanvas(): HTMLCanvasElement | null {
   const caratString = '░▒▓██';
 
   const dark = false;
-  // let dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  // window.matchMedia('(prefers-color-scheme: dark)')
-  // .addEventListener('change', (e) => { dark = e.matches; });
 
   /* Draw the current state of the ascii animation onto our canvas */
   const redrawCanvas = () => {
@@ -114,12 +112,14 @@ function createTextCanvas(): HTMLCanvasElement | null {
   // Draw now to start
   redrawCanvas();
 
-  // Repeat to animate
-  setInterval(() => {
+  // Repeat to animate - store interval ID for cleanup
+  const intervalId = setInterval(() => {
     redrawCanvas();
   }, UPDATE_INTERVAL);
 
-  return canvas;
+  const cleanup = () => clearInterval(intervalId);
+
+  return [canvas, cleanup];
 }
 
 const useRingHeight = () => {
@@ -145,13 +145,13 @@ function CodeRing({
   visible,
 }:
 {
-  canvases: (HTMLCanvasElement | null)[],
+  canvases: [HTMLCanvasElement | null, () => void][],
   y: number,
   r: number,
   repeats: number,
   visible:boolean
 }) {
-  const canvas = useMemo(() => canvases[Math.floor(Math.random() * canvases.length)], [canvases]);
+  const canvas = useMemo(() => canvases[Math.floor(Math.random() * canvases.length)]?.[0] ?? null, [canvases]);
 
   const speed = useMemo(() => Math.random() * 0.5 + 0.5, []);
   const startingOffset = useMemo(() => Math.random(), []);
@@ -165,8 +165,7 @@ function CodeRing({
 
   useFrame(({
     clock,
-    // camera
-  }) => {
+  }, delta) => {
     if (!cylinder.current || !texture.current || !materialRef.current) return;
 
     // Rotate the texture slightly--must be done by the texture and not rotating the mesh itself
@@ -174,8 +173,9 @@ function CodeRing({
     texture.current.offset.x = startingOffset * CANVAS_WIDTH
      + (clock.getElapsedTime() / 60) * -speed;
 
+    // Normalize opacity fade to frame rate (target: ~6 per second at 60fps)
     if (visible && materialRef.current.opacity < 1) {
-      materialRef.current.opacity += 0.1;
+      materialRef.current.opacity = Math.min(materialRef.current.opacity + 6 * delta, 1);
     }
   });
 
@@ -228,6 +228,8 @@ function CodeRing({
   );
 }
 
+const MemoizedCodeRing = React.memo(CodeRing);
+
 export function CodeRings({ visible }: { visible: boolean }) {
   // Watches font face and becomes true when its loaded
   const isFontLoaded = useFontFaceObserver([
@@ -239,16 +241,22 @@ export function CodeRings({ visible }: { visible: boolean }) {
 
   // Spawn all the canvas textures that our rings will use.
   const canvases = useMemo(() => (
-    new Array(N_RING_CANVASES).fill(null).map(() => (isFontLoaded ? createTextCanvas() : null))
+    new Array(N_RING_CANVASES).fill(null).map(() => (isFontLoaded ? createTextCanvas() : [null, () => {}] as [null, () => void]))
   ), [isFontLoaded]);
+
+  // Cleanup intervals when component unmounts
+  useEffect(() => () => {
+    canvases.forEach(([, cleanup]) => cleanup?.());
+  }, [canvases]);
 
   const [nVisibleRings, setNVisibleRings] = useState(0);
 
+  const allRingsVisible = nVisibleRings >= N_RINGS;
   useInterval(() => {
     if (visible && nVisibleRings < N_RINGS) {
       setNVisibleRings(nVisibleRings + 1);
     }
-  }, 50);
+  }, allRingsVisible ? null : 50);
 
   const ringHeight = useRingHeight();
 
@@ -260,7 +268,7 @@ export function CodeRings({ visible }: { visible: boolean }) {
         and then rotate it toward camera */}
         <group rotation={[Math.PI / 2, 0, 0]} position={[-1, 1, 2]} scale={1.8}>
           {new Array(N_RINGS).fill(null).map((_, index) => (
-            <CodeRing
+            <MemoizedCodeRing
               y={index * (-4) * ringHeight}
               r={3 - index * 0.1}
               repeats={

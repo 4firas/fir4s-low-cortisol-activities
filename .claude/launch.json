@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Frontend (Next.js)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "cwd": "${workspaceRoot}/frontend"
+    },
+    {
+      "name": "Backend (Sanity Studio)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3333,
+      "cwd": "${workspaceRoot}/backend"
+    }
+  ]
+}

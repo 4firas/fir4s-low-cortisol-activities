@@ -44,7 +44,7 @@ declare global {
 }
 /* eslint-enable no-unused-vars */
 
-export const ProjectEntry = ({
+export const ProjectEntry = React.memo(({
   project,
   basePosition,
   open,
@@ -225,4 +225,4 @@ export const ProjectEntry = ({
       <ProjectTitlePreview project={project} basePosition={basePosition} visible={hovering} />
     </>
   );
-};
+});

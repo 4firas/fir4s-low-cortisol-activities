@@ -4,11 +4,8 @@ import { Color } from 'three';
 import {
   animated,
   config,
-  // easings,
   useSpring,
 } from '@react-spring/three';
-// import { useControls } from 'leva';
-// import { useControls } from 'leva';
 import { Scribble } from './Scribble';
 import { CoordArray } from './CoordArray';
 import { useTrueAfterDelay } from './useTrueAfterDelay';
@@ -20,9 +17,11 @@ import { ThreeButton } from './ThreeButton';
 import { useSceneController } from './SceneController';
 import colors from './colors';
 import { useBreakpoints } from './useBreakpoints';
-// import { rangeParams } from './rangeParams';
-// import spillPoints from './lines/spill';
-// import { rangeParams } from './rangeParams';
+
+const coffeeBackColor = new Color(colors.pitchBlack);
+const coffeeLiquidColor = new Color('#8B5E3C');
+const coffeeLinesColor = new Color(colors.blueSlate);
+const coffeeRotation: CoordArray = [Math.PI, 0, 0];
 
 export function CoffeeCup() {
   const breakpoints = useBreakpoints();
@@ -78,8 +77,8 @@ export function CoffeeCup() {
         size={1.8}
         position={[0.1, -0.1, -0.3]}
         lineWidth={0.4}
-        color={new Color(colors.pitchBlack)}
-        rotation={[Math.PI, 0, 0]}
+        color={coffeeBackColor}
+        rotation={coffeeRotation}
         visible={projectButtonVisible2}
         drawSpringConfig={config.molasses}
         curved
@@ -96,8 +95,8 @@ export function CoffeeCup() {
           size={1}
           position={[-0.1, 0.47, -0.15]}
           lineWidth={0.15}
-          color={new Color('#8B5E3C')}
-          rotation={[Math.PI, 0, 0]}
+          color={coffeeLiquidColor}
+          rotation={coffeeRotation}
           visible={!spilled && projectButtonVisible2}
           drawSpringConfig={config.molasses}
           curved
@@ -112,8 +111,8 @@ export function CoffeeCup() {
         size={1.8}
         position={[0, 0, 0]}
         lineWidth={0.02}
-        color={new Color(colors.blueSlate)}
-        rotation={[Math.PI, 0, 0]}
+        color={coffeeLinesColor}
+        rotation={coffeeRotation}
         visible={projectButtonVisible1}
         drawSpringConfig={config.molasses}
         scaleSpringConfig={config.wobbly}

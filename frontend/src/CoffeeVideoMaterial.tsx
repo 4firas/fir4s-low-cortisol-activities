@@ -181,11 +181,6 @@ export const CoffeeVideoMaterial = ({ videoSrc, thumbSrc, active = true }:
     if (videoElement && isPlaying(videoElement) && !active) videoElement.pause();
   }, 500);
 
-  // Make sure the video is paused when not active
-  useInterval(() => {
-    if (videoElement && isPlaying(videoElement) && !active) videoElement.pause();
-  }, 500);
-
   return (
     <coffeeShaderMaterial
       depthTest={false}

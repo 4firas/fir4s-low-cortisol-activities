@@ -52,16 +52,12 @@ export const CameraController = ({
   const targetPosition = useRef(new Vector3());
 
   useFrame(() => {
-    const defaultMouseCoords = { x: 0, y: 0 };
-    let { x: displaceX, y: displaceY } = mouseNormalizeCoords.current
-      ? mouseNormalizeCoords.current : defaultMouseCoords;
+    let displaceX = 0;
+    let displaceY = 0;
 
-    if (hasNoMouse) {
-      ({ x: displaceX, y: displaceY } = defaultMouseCoords);
-    }
-
-    if (!controllable) {
-      ({ x: displaceX, y: displaceY } = defaultMouseCoords);
+    if (controllable && !hasNoMouse && mouseNormalizeCoords.current) {
+      displaceX = mouseNormalizeCoords.current.x;
+      displaceY = mouseNormalizeCoords.current.y;
     }
 
     const [x, y, z] = stagePosition;

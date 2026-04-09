@@ -58,25 +58,6 @@ export const TestimonialsWindow = ({
       {...terminalWindowProps}
     >
       <div className={`grid p-[1em] ${breakpoint ? 'grid-cols-[8em_1fr]' : ''}`}>
-        {/* <div className="flex items-center justify-center col-span-2 mt-[-1em] gap-[0.5em]">
-          <div className="relative inline-block">
-            <span
-              className="
-                grid place-items-center rounded-full
-                bg-blue text-white absolute top-[0em] right-[0em]
-                w-[1.5em] h-[1.5em] text-[0.7em]
-              "
-            >
-              3
-            </span>
-            <img src="/images/messages-icon.svg" className="w-[3em] h-[3em] m-auto"
-            alt="Message bubble" />
-          </div>
-          <h2 className="font-display text-[2em]">
-            <span className="text-[1.5em]">B</span>
-            MAIL
-          </h2>
-        </div> */}
         <div>
           <ul className={`${breakpoint ? '' : 'flex'}`}>
             {testimonials.map(({ shortName, headshot }, index) => (
@@ -88,7 +69,7 @@ export const TestimonialsWindow = ({
                   flex flex-col text-center justify-start items-center gap-[0.5em]
                   w-full p-[0.5em]
                   sm:text-left sm:flex-row
-                  ${messageIndex === index ? 'bg-[#bdffbd]' : ''}
+                  ${messageIndex === index ? 'bg-darkGoldenrod text-pitchBlack' : ''}
                 `}
                 >
                   <div className="border-[2px] rounded-full bg-blue">
@@ -97,7 +78,7 @@ export const TestimonialsWindow = ({
                         <img
                           src={headshot}
                           className="w-[3em] h-[3em] min-w-[3em] pointer-events-none rounded-full object-cover"
-                          alt="headshot"
+                          alt={`${shortName} headshot`}
                         />
                       )
                       : (
@@ -105,9 +86,9 @@ export const TestimonialsWindow = ({
                           <Image
                             src={headshot}
                             className="object-cover rounded-full pointer-events-none"
-                            alt="headshot"
+                            alt={`${shortName} headshot`}
                             placeholder="blur"
-                            layout="fill"
+                            fill
                           />
                         </div>
                       )}
@@ -118,11 +99,6 @@ export const TestimonialsWindow = ({
                       {shortName}
                     </h2>
 
-                    {/* <h3 className="">
-                      re:
-                      {' '}
-                      <span className="text-[1.5em]">{subject}</span>
-                    </h3> */}
                   </div>
                 </button>
               </li>
@@ -130,7 +106,7 @@ export const TestimonialsWindow = ({
           </ul>
 
         </div>
-        <div className="bg-[#bdffbd] text-[1em] p-[1em] grid">
+        <div className="bg-blueSlate text-pitchBlack text-[1em] p-[1em] grid">
           {/* A hidden div with the longest testinmonial which will be used to size */}
           <QuoteFigure testimonial={longestTestimonial} hidden />
           <QuoteFigure testimonial={testimonial} />

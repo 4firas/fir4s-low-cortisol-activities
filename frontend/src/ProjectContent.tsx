@@ -111,7 +111,7 @@ const QuoteBlock = ({ value }: {
         {value.title}
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={getSanityImageUrlFor(value.headshot)!.width(800).url()} alt="hi" />
+      <img src={getSanityImageUrlFor(value.headshot)!.width(800).url()} alt={`${value.author} headshot`} />
     </figcaption>
   </figure>
 );

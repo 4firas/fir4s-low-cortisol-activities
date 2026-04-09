@@ -53,26 +53,32 @@ export function useGifTexture(
         tempCanvas.height = dims.height;
         const tempCtx = tempCanvas.getContext('2d')!;
 
+        // Pre-create ImageData objects for each frame to avoid per-frame allocation
+        const frameImageDatas = frames.map((frame) => new ImageData(
+          new Uint8ClampedArray(frame.patch),
+          frame.dims.width,
+          frame.dims.height,
+        ));
+
         const animate = () => {
           if (cancelled) return;
           const frame = frames[frameIndex];
           if (!frame) return;
           const { dims: frameDims, delay } = frame;
 
-          // Only advance frames while active (hover/open). When inactive, we keep
-          // showing the last rendered frame (typically the "thumb"/first frame).
-          if (activeRef.current) {
-            frameIndex = (frameIndex + 1) % frames.length;
+          // Only advance and render frames while active. When inactive, schedule
+          // a slower poll to avoid busy-waiting while still resuming quickly.
+          if (!activeRef.current) {
+            animTimeout = setTimeout(() => {
+              animFrameId = requestAnimationFrame(animate);
+            }, 250);
+            return;
           }
 
-          const imageData = new ImageData(
-            new Uint8ClampedArray(frame.patch),
-            frameDims.width,
-            frameDims.height,
-          );
+          frameIndex = (frameIndex + 1) % frames.length;
 
           tempCtx.clearRect(0, 0, dims.width, dims.height);
-          tempCtx.putImageData(imageData, frameDims.left, frameDims.top);
+          tempCtx.putImageData(frameImageDatas[frameIndex], frameDims.left, frameDims.top);
           offCtx.drawImage(tempCanvas, 0, 0);
           ctx.drawImage(offscreen, 0, 0);
 

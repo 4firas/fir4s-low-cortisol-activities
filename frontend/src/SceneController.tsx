@@ -1,6 +1,5 @@
-// import { createContext, useContext } from 'react';
 import { event } from 'nextjs-google-analytics';
-import create from 'zustand';
+import { create } from 'zustand';
 import { useCustomCursorVanillaStore } from './CustomCursor';
 
 export const sceneNames = [
@@ -36,13 +35,3 @@ export const useSceneController = create<SceneController>((set) => ({
   },
 }));
 
-// export const SceneControllerContext = createContext<SceneController>({
-//   scene: 'error',
-//   setScene: () => {
-//     throw new Error('SceneController must be used within a <SceneControllerProvider>.');
-//   },
-// });
-
-// export const SceneControllerProvider = SceneControllerContext.Provider;
-
-// export const useSceneController = ():SceneController => useContext(SceneControllerContext);

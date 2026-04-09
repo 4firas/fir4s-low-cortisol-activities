@@ -303,7 +303,7 @@ export function ComputerTerminal() {
                 text-[max(0.7em,16px)]
                 right-0
                 top-0
-                z-[-1]
+                z-[1]
               `}
             >
               <TerminalButton
